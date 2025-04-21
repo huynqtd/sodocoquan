@@ -1,79 +1,243 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>So do co quan CCT Na Ri</title>
+  <meta charset="UTF-8">
+  <title>Sơ đồ tổ chức cơ quan</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f2f5;
+      padding: 20px;
+    }
+
+    .node {
+      text-align: center;
+      margin: 20px;
+      position: relative;
+    }
+
+    .box {
+      display: inline-block;
+      background: #fff;
+      border: 2px solid #007BFF;
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 10px;
+      position: relative;
+      width: 160px;
+    }
+
+    .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 2px solid #007BFF;
+      object-fit: cover;
+      margin-bottom: 8px;
+    }
+
+    .children {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    button {
+      margin: 2px;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .line {
+      position: absolute;
+      width: 2px;
+      background-color: #007BFF;
+    }
+  </style>
 </head>
 <body>
-   <h1>Sơ đồ chi cục thuế huyện Na Rì</h1>
-   <h2>Chi cục trưởng</h2>
-   <table>
-      <tr> <th>Họ và tên</th>
-        <th>Thông tin</th>
-    </tr>
-       <td rowspan="3">Nông Quang Huy</td>
-       <td>Ngày sinh: 06/12/1973</td>
-       <tr><td>Số điện thoại: 0915201572</td></tr>
-       <tr><td>Địa chỉ: Pò Đon</td></tr>
-   </table>
-   <table>
-       <h2>Phó chi cục trưởng</h2>
-      <tr><th>Họ và tên</th>
-        <th>Thông tin</th>
-        </tr>       
-           <td rowspan="3">Lý Văn Quyến</td>
-           <td>Ngày sinh: 09/10/1970</td>
-           <tr><td>Số điện thoại: 0983372446</td></tr>
-           <tr><td>Địa chỉ: Bản Bia</td></tr>
-    
-   </table>
-  
-   <h2>Đội nghiệp vụ quản lý Thuế</h2>
-   
-    <h3>Đội trưởng</h3> 
-        <li>Nguyễn Thị Mai Lan 03/07/1983</li>
-    
-    <h3>Đội phó</h3>
-       <li>Hứa Văn Tùng 15/07/1975</li>
-       <li>Nông Trung Hiếu 12/02/1972</li>
-       <li>Hoàng Thị Hảo 13/02/1981</li>
-      
-    <h3>Công chức</h3>
-        <li>Hoàng Thị Bông 12/02/1980</li>
-        <li>Đàm Thị Hương 23/08/1996</li>
-        <li>Hoàng Thị Lan 17/07/1985</li>
-        <li>Hoàng Văn Linh 05/07/1965</li>
-        <li>Đàm Triệu Huyên 16/10/1996</li>
-        <li>Phan Văn Mạnh 01/04/1992</li>
-        <li>Nông Thị Nhung 19/07/1991</li>
-        <li>Lục Thị Mỹ Nương</li>
-        <li>Nông Thị Linh 09/04/1996</li>
-        <li>Nông Quốc Huy 08/08/1985</li>
-        <li>Triệu Thùy Linh 15/09/1997</li>
-        <li>Hoàng Thị Hương Nhài 06/12/1992</li>
-        <li>Đàm Thị Kim Liễu</li>
-  
-    
+  <h1>Sơ đồ tổ chức cơ quan</h1>
+  <div id="orgChart" style="position: relative;"></div>
 
-    
-    <h2>Đội tổng hợp</h2>
-        <h3>Đội trưởng</h3>
-            <li>Nông Thị Diệu Lan 11/09/1989</li>
-        
-        <h3>Đội Phó</h3>
-            <li>Nguyễn Thị Tuyết 29/05/1987</li>
-        <h3>Công chức</h3>
-            <li>Nguyễn Thị Thời 16/06/1998</li>
-            <li>Nông Minh Truyền 25/03/1976</li>
-            <li>Vi văn Ngự 13/10/1973</li>
-            <li>Hoàng thị Thắm 13/11/1980</li>
-            <li>Nguyễn văn Ninh 10/10/1966</li>
-          
-    <ol></ol>
-   
-   
+  <script>
+    let idCounter = 8;
 
+    const orgData = {
+      id: 1,
+      name: "Nguyễn Văn A",
+      position: "Đội trưởng",
+      avatar: "https://via.placeholder.com/60",
+      children: [
+        {
+          id: 2,
+          name: "Trần Thị B",
+          position: "Đội phó 1",
+          avatar: "https://via.placeholder.com/60",
+          children: [
+            { id: 4, name: "Tổ 1", position: "Tổ", avatar: "https://via.placeholder.com/60", children: [] },
+            { id: 5, name: "Tổ 2", position: "Tổ", avatar: "https://via.placeholder.com/60", children: [] },
+          ]
+        },
+        {
+          id: 3,
+          name: "Lê Văn C",
+          position: "Đội phó 2",
+          avatar: "https://via.placeholder.com/60",
+          children: [
+            { id: 7, name: "Tổ 4", position: "Tổ", avatar: "https://via.placeholder.com/60", children: [] },
+          ]
+        }
+      ]
+    };
+
+    const to3Node = { id: 6, name: "Tổ 3", position: "Tổ", avatar: "https://via.placeholder.com/60", children: [] };
+
+    function renderTree(node, parentElement) {
+      const container = document.createElement("div");
+      container.className = "node";
+
+      const title = document.createElement("div");
+      title.className = "box";
+
+      const img = document.createElement("img");
+      img.src = node.avatar || "https://via.placeholder.com/60";
+      img.alt = "avatar";
+      img.className = "avatar";
+      title.appendChild(img);
+
+      const text = document.createElement("div");
+      text.textContent = `${node.position}: ${node.name}`;
+      title.appendChild(text);
+
+      container.appendChild(title);
+
+      const controls = document.createElement("div");
+      controls.innerHTML = `
+        <button onclick="editNode(${node.id})">Sửa</button>
+        <button onclick="deleteNode(${node.id})">Xoá</button>
+        <button onclick="addChild(${node.id})">Thêm con</button>
+      `;
+      container.appendChild(controls);
+
+      parentElement.appendChild(container);
+
+      if (parentElement !== document.getElementById("orgChart")) {
+        drawLine(parentElement.querySelector(".box"), title);
+      }
+
+      if (node.children && node.children.length > 0) {
+        const childrenContainer = document.createElement("div");
+        childrenContainer.className = "children";
+        node.children.forEach(child => {
+          renderTree(child, childrenContainer);
+        });
+
+        // Nếu node là đội trưởng thì thêm Tổ 3 vào ngang hàng với các tổ
+        if (node.id === 1) {
+          renderTree(to3Node, childrenContainer);
+        }
+
+        container.appendChild(childrenContainer);
+      }
+    }
+
+    function drawLine(fromElem, toElem) {
+      const orgChart = document.getElementById("orgChart");
+      const fromRect = fromElem.getBoundingClientRect();
+      const toRect = toElem.getBoundingClientRect();
+      const chartRect = orgChart.getBoundingClientRect();
+
+      const x1 = fromRect.left + fromRect.width / 2 - chartRect.left;
+      const y1 = fromRect.bottom - chartRect.top;
+      const x2 = toRect.left + toRect.width / 2 - chartRect.left;
+      const y2 = toRect.top - chartRect.top;
+
+      const line = document.createElement("div");
+      line.className = "line";
+      line.style.left = Math.min(x1, x2) + "px";
+      line.style.top = y1 + "px";
+      line.style.height = Math.abs(y2 - y1) + "px";
+      line.style.transform = `translateX(${Math.abs(x2 - x1) / 2}px)`;
+      orgChart.appendChild(line);
+    }
+
+    function findNodeById(node, id) {
+      if (node.id === id) return node;
+      for (let child of node.children) {
+        const found = findNodeById(child, id);
+        if (found) return found;
+      }
+      return null;
+    }
+
+    function findAndDeleteNode(parent, id) {
+      parent.children = parent.children.filter(child => {
+        if (child.id === id) return false;
+        findAndDeleteNode(child, id);
+        return true;
+      });
+    }
+
+    function editNode(id) {
+      const node = id === 6 ? to3Node : findNodeById(orgData, id);
+      if (!node) return;
+      const newName = prompt("Nhập tên mới:", node.name);
+      const newPosition = prompt("Nhập chức vụ mới:", node.position);
+      const newAvatar = prompt("URL ảnh đại diện mới:", node.avatar);
+      if (newName) node.name = newName;
+      if (newPosition) node.position = newPosition;
+      if (newAvatar) node.avatar = newAvatar;
+      renderOrgChart();
+    }
+
+    function deleteNode(id) {
+      if (orgData.id === id) {
+        alert("Không thể xoá người đứng đầu tổ chức.");
+        return;
+      }
+      if (id === 6) {
+        to3Node.name = "";
+        to3Node.position = "";
+        to3Node.avatar = "";
+        renderOrgChart();
+        return;
+      }
+      findAndDeleteNode(orgData, id);
+      renderOrgChart();
+    }
+
+    function addChild(parentId) {
+      const parent = parentId === 6 ? to3Node : findNodeById(orgData, parentId);
+      if (!parent) return;
+      const name = prompt("Nhập tên nhân sự mới:");
+      const position = prompt("Nhập chức vụ:");
+      const avatar = prompt("URL ảnh đại diện (tuỳ chọn):", "https://via.placeholder.com/60");
+      if (name && position) {
+        parent.children.push({ id: idCounter++, name, position, avatar, children: [] });
+        renderOrgChart();
+      }
+    }
+
+    function renderOrgChart() {
+      const orgChart = document.getElementById("orgChart");
+      orgChart.innerHTML = "";
+      renderTree(orgData, orgChart);
+    }
+
+    renderOrgChart();
+  </script>
 </body>
 </html>
